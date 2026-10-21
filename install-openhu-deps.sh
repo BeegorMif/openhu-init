@@ -74,7 +74,7 @@ fi
 cat <<'EOF'
 
 Build dependencies are installed. Next, sync the sources and build OpenHU:
-  ./update.sh ~/openhu
+  ./sync-openhu-repos.sh ~/openhu
   cd ~/openhu/openhu
   ./build.sh release --aasdk-path ../aasdk-ref --package --output-dir ./packages
 

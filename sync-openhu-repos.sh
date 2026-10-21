@@ -27,12 +27,22 @@ sync_repo() {
         return 1
     fi
 
-    local actual_url current_branch
+    local actual_url current_branch migrate_aasdk_origin=false
     actual_url="$(git -C "$dir" remote get-url origin 2>/dev/null || true)"
     if [[ "${actual_url,,}" != "${url,,}" && "${actual_url,,}" != "${url,,}.git" ]]; then
-        printf 'ERROR: %s has unexpected origin:\n  found:    %s\n  expected: %s\n' \
-            "$name" "${actual_url:-<no origin>}" "$url" >&2
-        return 1
+        case "${name}:${actual_url,,}" in
+            aasdk-ref:https://github.com/average-web-dev/aasdk|\
+            aasdk-ref:https://github.com/average-web-dev/aasdk.git|\
+            aasdk-ref:git@github.com:average-web-dev/aasdk.git|\
+            aasdk-ref:ssh://git@github.com/average-web-dev/aasdk.git)
+                migrate_aasdk_origin=true
+                ;;
+            *)
+                printf 'ERROR: %s has unexpected origin:\n  found:    %s\n  expected: %s\n' \
+                    "$name" "${actual_url:-<no origin>}" "$url" >&2
+                return 1
+                ;;
+        esac
     fi
 
     if [[ -n "$(git -C "$dir" status --porcelain --untracked-files=normal)" ]]; then
@@ -48,8 +58,15 @@ sync_repo() {
     fi
 
     printf 'Updating %s\n' "$name"
-    git -C "$dir" fetch --prune origin
-    git -C "$dir" merge --ff-only "origin/$branch"
+    if [[ "$migrate_aasdk_origin" == true ]]; then
+        printf 'Migrating the clean AASDK checkout from average-web-dev to %s\n' "$url"
+        git -C "$dir" fetch "$url" "$branch"
+        git -C "$dir" merge --ff-only FETCH_HEAD
+        git -C "$dir" remote set-url origin "$url"
+    else
+        git -C "$dir" fetch --prune origin
+        git -C "$dir" merge --ff-only "origin/$branch"
+    fi
 }
 
 sync_repo openhu https://github.com/BeegorMif/openhu.git main

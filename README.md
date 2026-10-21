@@ -27,8 +27,9 @@ Clone or fast-forward the OpenHU repositories under `~/openhu`:
 ./sync-openhu-repos.sh ~/openhu
 ```
 
-The sync script also checks out the compatible `BeegorMif/aasdk` branch `openhu`. It stops instead
-of overwriting local changes or updating a folder whose origin or branch differs from the expected one.
+The sync script also checks out the compatible `BeegorMif/aasdk` branch `openhu`. It safely updates a clean
+existing AASDK checkout from the previous `average-web-dev/aasdk` origin. It stops instead of overwriting local
+changes or updating folders with an unexpected origin or branch.
 
 Build OpenHU for the Pi's ARM64 OS:
 
