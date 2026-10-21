@@ -39,13 +39,16 @@ cd ~/openhu/openhu
 sudo apt install ./packages/libaasdk_*_arm64.deb ./packages/openhu_*_arm64.deb
 ```
 
-Start OpenHU in a desktop session:
+On Raspberry Pi OS Lite, install a service to start OpenHU on the HDMI display with EGLFS:
 
 ```bash
-mkdir -p ~/.config/openhu
-cd ~/.config/openhu
-openhu
+./install-openhu-service.sh ~/openhu
 ```
+
+The script enables and starts `openhu-eglfs.service` for the current user. It expects OpenHU to be built at
+`~/openhu/openhu/build-release/bin/openhu` or installed at `/usr/libexec/openhu/openhu` (or `/usr/bin/openhu`).
+Check startup with `sudo journalctl -u openhu-eglfs.service -b`; disable it with
+`sudo systemctl disable --now openhu-eglfs.service`. EGLFS takes over tty1 and the HDMI display.
 
 The repository syncs these project sources:
 
