@@ -47,6 +47,8 @@ On Raspberry Pi OS Lite, install a service to start OpenHU on the HDMI display w
 
 The script enables and starts `openhu-eglfs.service` for the current user. It expects OpenHU to be built at
 `~/openhu/openhu/build-release/bin/openhu` or installed at `/usr/libexec/openhu/openhu` (or `/usr/bin/openhu`).
+It also installs or reloads OpenHU's USB udev rule so the service can access Android phones; reconnect a phone
+that was already plugged in when the rule was installed.
 Check startup with `sudo journalctl -u openhu-eglfs.service -b`; disable it with
 `sudo systemctl disable --now openhu-eglfs.service`. EGLFS takes over tty1 and the HDMI display. The service waits
 for logind and tty1, but not `systemd-user-sessions` or NetworkManager, so the display can start earlier while

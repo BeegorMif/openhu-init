@@ -59,6 +59,30 @@ else
     SUDO=(sudo)
 fi
 
+# A direct build does not install OpenHU's phone-access udev rule. Copy it from
+# the checkout when available; a package installation may already provide it.
+RULE_SOURCE="$BASE_DIR/openhu/packaging/udev/99-openhu.rules"
+RULE_FOUND=false
+for rule in \
+    /etc/udev/rules.d/99-openhu.rules \
+    /usr/lib/udev/rules.d/99-openhu.rules \
+    /lib/udev/rules.d/99-openhu.rules; do
+    if [[ -r "$rule" ]]; then
+        RULE_FOUND=true
+    fi
+done
+
+if [[ -r "$RULE_SOURCE" ]]; then
+    "${SUDO[@]}" install -D -o root -g root -m 0644 "$RULE_SOURCE" /etc/udev/rules.d/99-openhu.rules
+    RULE_FOUND=true
+elif [[ "$RULE_FOUND" != true ]]; then
+    echo "ERROR: OpenHU USB udev rule not found in the checkout or installed system." >&2
+    echo "Build/install OpenHU or sync its source before installing the EGLFS service." >&2
+    exit 1
+fi
+
+"${SUDO[@]}" udevadm control --reload-rules
+
 APP_DIR="$(dirname "$APP")"
 WORK_DIR="$USER_HOME/.config/openhu"
 GROUPS=()
@@ -115,6 +139,7 @@ cat <<EOF
 Installed and started openhu-eglfs.service for $OPENHU_USER.
 OpenHU executable: $APP
 OpenHU data directory: $WORK_DIR
+OpenHU USB udev rules reloaded. Reconnect a phone that was already plugged in.
 
 Useful commands:
   sudo systemctl status openhu-eglfs.service
