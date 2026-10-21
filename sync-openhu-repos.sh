@@ -55,8 +55,8 @@ sync_repo() {
 sync_repo openhu https://github.com/BeegorMif/openhu.git main
 sync_repo openhu-os https://github.com/BeegorMif/openhu-os.git main
 sync_repo openhu-plugins https://github.com/BeegorMif/openhu-plugins.git main
-# OpenHU currently builds against this compatible AASDK fork and branch.
-sync_repo aasdk-ref https://github.com/average-web-dev/aasdk.git openhu
+# OpenHU builds against the compatible AASDK branch in the user's fork.
+sync_repo aasdk-ref https://github.com/BeegorMif/aasdk.git openhu
 
 cat <<EOF
 

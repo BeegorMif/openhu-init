@@ -27,7 +27,7 @@ Clone or fast-forward the OpenHU repositories under `~/openhu`:
 ./sync-openhu-repos.sh ~/openhu
 ```
 
-The sync script also checks out the currently compatible `average-web-dev/aasdk` branch `openhu`. It stops instead
+The sync script also checks out the compatible `BeegorMif/aasdk` branch `openhu`. It stops instead
 of overwriting local changes or updating a folder whose origin or branch differs from the expected one.
 
 Build OpenHU for the Pi's ARM64 OS:
@@ -51,4 +51,4 @@ The repository syncs these project sources:
 - [BeegorMif/openhu](https://github.com/BeegorMif/openhu)
 - [BeegorMif/openhu-os](https://github.com/BeegorMif/openhu-os)
 - [BeegorMif/openhu-plugins](https://github.com/BeegorMif/openhu-plugins)
-- [average-web-dev/aasdk](https://github.com/average-web-dev/aasdk), compatible branch `openhu`
+- [BeegorMif/aasdk](https://github.com/BeegorMif/aasdk), compatible branch `openhu`
