@@ -77,7 +77,9 @@ trap 'rm -f "$TMP_UNIT"' EXIT
 cat >"$TMP_UNIT" <<EOF
 [Unit]
 Description=OpenHU on the local HDMI display (EGLFS)
-After=systemd-user-sessions.service systemd-logind.service
+# Do not wait for systemd-user-sessions: on Raspberry Pi OS that gate can
+# follow NetworkManager and delay the display. OpenHU can start before Wi-Fi.
+After=systemd-logind.service
 Conflicts=getty@tty1.service
 After=getty@tty1.service
 
