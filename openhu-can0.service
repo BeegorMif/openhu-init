@@ -1,0 +1,13 @@
+[Unit]
+Description=Configure the OpenHU SocketCAN interface
+After=systemd-udev-trigger.service
+Wants=systemd-udev-trigger.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/openhu-can0-setup
+RemainAfterExit=yes
+TimeoutStartSec=15s
+
+[Install]
+WantedBy=multi-user.target

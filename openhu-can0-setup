@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Configure a SocketCAN interface using /etc/default/openhu-can0.
+
+set -Eeuo pipefail
+
+CONFIG_FILE=/etc/default/openhu-can0
+if [[ ! -r "$CONFIG_FILE" ]]; then
+    printf 'ERROR: CAN configuration is missing: %s\n' "$CONFIG_FILE" >&2
+    exit 1
+fi
+# shellcheck disable=SC1091
+. "$CONFIG_FILE"
+
+CAN_INTERFACE="${CAN_INTERFACE:-can0}"
+CAN_BITRATE="${CAN_BITRATE:-500000}"
+
+if [[ ! "$CAN_INTERFACE" =~ ^can[0-9]+$ ]]; then
+    printf 'ERROR: invalid CAN interface name: %s\n' "$CAN_INTERFACE" >&2
+    exit 1
+fi
+if [[ ! "$CAN_BITRATE" =~ ^[0-9]+$ ]] || ((10#$CAN_BITRATE == 0)); then
+    printf 'ERROR: bitrate must be a positive number in bits per second: %s\n' "$CAN_BITRATE" >&2
+    exit 1
+fi
+
+if ! command -v ip >/dev/null 2>&1; then
+    echo "ERROR: iproute2 is required (the 'ip' command was not found)." >&2
+    exit 1
+fi
+
+# gs_usb normally loads automatically from the USB adapter's modalias; load it
+# explicitly too, so a service start also works after a late module load.
+modprobe gs_usb || true
+
+for ((attempt = 1; attempt <= 10; attempt++)); do
+    if ip link show dev "$CAN_INTERFACE" >/dev/null 2>&1; then
+        break
+    fi
+    if ((attempt == 10)); then
+        printf 'ERROR: %s did not appear after 10 seconds. Check the adapter and gs_usb driver.\n' \
+            "$CAN_INTERFACE" >&2
+        exit 1
+    fi
+    sleep 1
+done
+
+# A bitrate can only be changed while the CAN interface is down.
+ip link set dev "$CAN_INTERFACE" down || true
+ip link set dev "$CAN_INTERFACE" type can bitrate "$CAN_BITRATE"
+ip link set dev "$CAN_INTERFACE" up
+ip -details link show dev "$CAN_INTERFACE"

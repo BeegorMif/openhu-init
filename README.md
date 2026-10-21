@@ -54,6 +54,16 @@ Check startup with `sudo journalctl -u openhu-eglfs.service -b`; disable it with
 for logind and tty1, but not `systemd-user-sessions` or NetworkManager, so the display can start earlier while
 network services finish loading.
 
+For a USB-CAN adapter such as the 1d50:606f gs_usb device, configure the SocketCAN interface at boot:
+
+```bash
+./install-can0-service.sh 500000 can0
+```
+
+This defaults to the 500 kbit/s rate you estimated for the BMW F20. CAN bitrate depends on which vehicle bus the
+adapter is connected to; change `CAN_BITRATE` in `/etc/default/openhu-can0` if needed, then restart the service.
+The CAN plugin retries if `can0` is not ready when OpenHU starts.
+
 The repository syncs these project sources:
 
 - [BeegorMif/openhu](https://github.com/BeegorMif/openhu)
