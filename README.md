@@ -34,7 +34,7 @@ Build OpenHU for the Pi's ARM64 OS:
 
 ```bash
 cd ~/openhu/openhu
-./build.sh release --with-aasdk --package --output-dir ./packages
+./build.sh release --aasdk-path ../aasdk-ref --package --output-dir ./packages
 sudo apt install ./packages/libaasdk_*_arm64.deb ./packages/openhu_*_arm64.deb
 ```
 

@@ -76,7 +76,7 @@ cat <<'EOF'
 Build dependencies are installed. Next, sync the sources and build OpenHU:
   ./update.sh ~/openhu
   cd ~/openhu/openhu
-  ./build.sh release --with-aasdk --package --output-dir ./packages
+  ./build.sh release --aasdk-path ../aasdk-ref --package --output-dir ./packages
 
 Then install the generated ARM64 packages:
   sudo apt install ./packages/libaasdk_*_arm64.deb ./packages/openhu_*_arm64.deb

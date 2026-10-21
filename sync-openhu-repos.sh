@@ -64,7 +64,7 @@ All repositories are current under: $BASE_DIR
 
 On Raspberry Pi OS based on Debian Trixie, build the OpenHU package with:
   cd "$BASE_DIR/openhu"
-  ./build.sh release --with-aasdk --package --output-dir ./packages
+  ./build.sh release --aasdk-path ../aasdk-ref --package --output-dir ./packages
 
 Then install the packages and start OpenHU:
   sudo apt install ./packages/libaasdk_*_arm64.deb ./packages/openhu_*_arm64.deb
