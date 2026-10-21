@@ -51,6 +51,7 @@ fi
     libgps-dev \
     libprotobuf-dev \
     libssl-dev \
+    libxcb-cursor0 \
     libswscale-dev \
     libusb-1.0-0-dev \
     ninja-build \
