@@ -57,6 +57,7 @@ fi
     ninja-build \
     pkg-config \
     protobuf-compiler \
+    python3-websockets \
     qml6-module-qtquick \
     qml6-module-qtquick-controls \
     qml6-module-qtquick-layouts \
